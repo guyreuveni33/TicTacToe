@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <!-- Linking external CSS for styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts for aesthetic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Finger+Paint&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Main container for the game -->
+<div class="container">
+    <!-- Game title -->
+    <h1 id="playerText">Tic Tac Toe</h1>
+    <!-- Restart button to reset the game -->
+    <button id="restartBtn">Restart</button>
+    <!-- Game board where the Tic Tac Toe game is played -->
+    <div id="gameboard">
+        <!-- Each box represents a cell in the Tic Tac Toe grid -->
+        <div class="box" id="0"></div>
+        <div class="box" id="1"></div>
+        <div class="box" id="2"></div>
+        <div class="box" id="3"></div>
+        <div class="box" id="4"></div>
+        <div class="box" id="5"></div>
+        <div class="box" id="6"></div>
+        <div class="box" id="7"></div>
+        <div class="box" id="8"></div>
+    </div>
+</div>
+
+<!-- JavaScript logic to handle the game interaction -->
+<script>
+    // Wait until the document is fully loaded to assign functionality
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all game cells
+        const boxes = document.querySelectorAll(".box");
+        // Add click event listener to each box
+        boxes.forEach(box => {
+            box.addEventListener('click', function () {
+                const index = this.id; // Get the ID of the clicked box
+                // Make a POST request to the server with the index of the clicked box
+                fetch("/move", {
+                    method: 'POST',
+                    body: new URLSearchParams({'index': index})
+                })
+                    .then(response => response.json()) // Parse the JSON response
+                    .then(data => updateGameState(data)); // Update the game state with the new data
+            });
+        });
+
+        // Handle clicking on the restart button
+        document.getElementById('restartBtn').addEventListener('click', function () {
+            // Make a POST request to restart the game
+            fetch("/restart", {method: 'POST'})
+                .then(response => response.json()) // Parse the JSON response
+                .then(data => updateGameState(data)); // Update the game state to initial
+        });
+    });
+
+    // Function to update the game state on the client side
+    function updateGameState(data) {
+        // Update each box with the respective player's move
+        data.game.forEach((value, idx) => {
+            document.getElementById(idx.toString()).textContent = value;
+        });
+
+        // Introduce a slight delay before showing the winner message
+        // This allows the last move to be displayed before the alert.
+        setTimeout(() => {
+            if (data.winner) {
+                document.getElementById('playerText').textContent = `${data.winner} has won!`;
+                alert(`${data.winner} wins!`);  // Alert the user that there is a winner
+            } else {
+                // Update the text content to show who the current player is if there's no winner yet
+                document.getElementById('playerText').textContent = `Current Player: ${data.current_player}`;
+            }
+        }, 300);  // Delay of 300 milliseconds
+    }
+
+</script>
+</body>
+</html>
