@@ -1,4 +1,4 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -13,7 +13,11 @@ body {
     color: var(--orange);
     font-family: 'Finger Paint', cursive;
 }
+
 h1 {
+    display: flex; /* Establishes a flex container */
+    align-items: center;
+    justify-content: center;
     font-size: 54px;
     text-transform: uppercase;
 }
@@ -30,10 +34,13 @@ h1 {
 
 #gameboard {
     width: 300px;
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     margin-top: 40px;
+    animation: slideFadeIn 2s ease-out forwards;
+
 }
+
 .box {
     height: 100px;
     width: 100px;
@@ -45,23 +52,105 @@ h1 {
     border-right: 2px solid;
     border-bottom: 2px solid;
 }
+
 .box:nth-child(3n) {
     border-right: none;
 }
+
 .box:nth-child(6) ~ .box {
     border-bottom: none;
 }
-button {
+
+
+.button {
     padding: 10px 20px;
     border-radius: 10px;
     background-color: var(--orange);
     color: #333;
-    border-color: var(--orange);
+    border: none;
     font-size: 18px;
-    transition: 200ms transform;
     font-weight: 600;
+    margin-top: 10px;
+    width: 170px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
 }
-button:hover {
+
+.button-animate {
+    animation: slideFadeIn 2s ease-out forwards;
+}
+
+.button:hover {
     cursor: pointer;
-    transform: translateY(-2px);
+    transform: translate3d(0, -2px, 0) scale(1.05);
 }
+
+
+#X_winning_counter {
+    display: none;
+    animation: slideFadeIn 2s ease-out forwards;
+
+}
+
+#O_winning_counter {
+    display: none;
+    animation: slideFadeIn 2s ease-out forwards;
+
+}
+
+.title-container {
+    display: flex; /* Establishes a flex container */
+    justify-content: space-between; /* Distributes space between the titles */
+    align-items: center; /* Vertically aligns titles if they are of different heights */
+}
+
+.title-container h1 {
+    margin-right: 70px; /* Add space between the titles */
+    margin-left: 70px; /* Add space between the titles */
+    margin-bottom: 40px;
+}
+
+#playerText {
+    width: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: slideFadeIn 2s ease-out forwards;
+
+}
+
+#restartBtn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#welcomeText {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: slideFadeIn 2s ease-out forwards;
+
+}
+
+/* Define keyframes for the slideFadeIn animation */
+@keyframes slideFadeIn {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#backBtn{
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
