@@ -29,21 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 turnMenuOff()
                 turnGameBoardOn()
                 numberOfPlayers = 1;
-                //  difficultyContainer.style.display = 'none'; // Hide the difficulty buttons
-                // gameBoard.style.display = 'flex';
-                // restartBtn.style.display = 'flex';
-                // onePlayerBtn.style.display = 'none';
-                // twoPlayersBtn.style.display = 'none';
-                // welcomeText.style.display = 'none';
-                // playerText.style.display = 'flex';
-                // backBtn.style.display = 'flex';
-                // xScore.style.display = 'flex';
-                // oScore.style.display = 'flex';
-                //document.getElementById('playerText').textContent = `Current Player: X`;
-                // difficultyHeader.style.display = 'none';
-                // difficultyButtons.forEach(button => {
-                //     button.style.display = 'none'
-                // });
             }
         });
 
@@ -53,22 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
             turnMenuOff()
             turnGameBoardOn()
             numberOfPlayers = 2
-            //difficultyContainer.style.display = 'none'; // Hide the difficulty buttons
-            // gameBoard.style.display = 'flex';
-            // restartBtn.style.display = 'flex';
-            // twoPlayersBtn.style.display = 'none';
-            // onePlayerBtn.style.display = 'none';
-            // welcomeText.style.display = 'none';
-            // playerText.style.display = 'flex';
-            // backBtn.style.display = 'flex';
-            // xScore.style.display = 'flex'
-            // oScore.style.display = 'flex'
-            // document.getElementById('playerText').textContent = `Current Player: X`;
-            //
-            // difficultyHeader.style.display = 'none';
-            // difficultyButtons.forEach(button => {
-            //     button.style.display = 'none'
-            // });
         });
 
         //this handle in modify the screen buttons to be hidden
@@ -147,19 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
         backBtn.addEventListener('click', function () {
             turnMenuOn()
             turnGameBoardOff()
-            //difficultyContainer.style.display = 'flex'; // Show the difficulty buttons again
-            // gameBoard.style.display = 'none';
-            // backBtn.style.display = 'none'
-            // xScore.style.display = 'none'
-            // oScore.style.display = 'none'
-            // restartBtn.style.display = 'none'
-            //  document.getElementById('playerText').innerHTML = `Good to have you back!<br>Pick your mode and start the fun!`;
-            // onePlayerBtn.style.display = 'flex'
-            // twoPlayersBtn.style.display = 'flex'
-            // difficultyHeader.style.display = 'flex';
-            // difficultyButtons.forEach(button => {
-            //     button.style.display = 'flex'
-            // });
             fetch("/back", {method: 'POST'})
                 .then(response => response.json())
                 .then(data => {
@@ -220,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // This allows the last move to be displayed before the alert.
             setTimeout(() => {
                 if (data.winner === 'tie') {
-                    document.getElementById('playerText').textContent = `Draw! The board is full with no winners`;
+                    document.getElementById('playerText').textContent = `Draw! The board is full with no winners!`;
                     console.log("aaaa")
                 } else if (data.winner && data.winner !== 'tie') {
                     console.log(data.winner, "acacacadcadca")
