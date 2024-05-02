@@ -18,12 +18,14 @@ This Tic Tac Toe game, was developed during a semester break after the test peri
   - **Easy:** The AI performs random moves.
   - **Medium:** Combines random moves with the Minimax algorithm for a balanced challenge.
   - **Hard:** Employs the Minimax algorithm, designed to be unbeatable.
-  
+
 ![image](https://github.com/guyreuveni33/TicTacToe/assets/116805344/485e9d38-0a0a-4035-9ba6-84a3c37a63e1)
 
 **Game Board:**
 - Displays scores and player turns, offering a user-friendly and interactive gaming experience.
-  
+  - **Restart Button:** Starts a new game while preserving the score tally.
+  - **Back Button:** Returns to the main menu and resets scores for a new set of games. 
+
  ![image](https://github.com/guyreuveni33/TicTacToe/assets/116805344/ec2c945c-7a02-43c1-93c6-cb9c87a23dc8)
 
 ### Getting Started
@@ -48,7 +50,8 @@ To set up and run the game, follow these instructions:
    ```
 5. Access the game at `http://localhost:5000` in your web browser.
 
+**Note:** The provided Docker commands facilitate running the game locally. Ensure Docker is properly installed and configured on your machine.
+
 ### How to Contribute
 
 Contributions are welcome! If you're interested in improving the game, please fork the repository on GitHub, make your changes, and submit a pull request. Ensure your contributions are well-documented and include any necessary updates to tests.
-
