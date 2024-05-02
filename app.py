@@ -4,6 +4,8 @@ import random
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
+medium_random = True
+
 
 def init_game_restart():
     """Initialize a new game session with empty slots and starting player 'X'."""
@@ -12,18 +14,31 @@ def init_game_restart():
     session['winner'] = None
 
 
+def init_game_back():
+    """Initialize a new game session with empty slots, starting player 'X', and reset counters."""
+    session['game'] = [''] * 9
+    session['current_player'] = 'X'
+    session['winner'] = None
+    session['counter_X'] = 0  # Reset the X wins counter
+    print(session['counter_X'])
+    session['counter_O'] = 0  # Reset the O wins counter
+
+
 def init_game():
     """Initialize a new game session with empty slots, starting player 'X', and reset counters."""
     session['game'] = [''] * 9
     session['current_player'] = 'X'
     session['winner'] = None
-    session['counter_X'] = 0
-    session['counter_O'] = 0
+    session['counter_X'] = 0  # Reset the X wins counter
+    print(session['counter_X'])
+    session['counter_O'] = 0  # Reset the O wins counter
+    session['difficulty'] = 'none'  # Optionally reset difficulty setting
 
 
 @app.route("/")
 def home():
     """Serve the main game page and initialize game state if not already present."""
+    print("aaaaa")
     init_game()
     return render_template("index.html", game=session['game'], current_player=session['current_player'],
                            counter_X=session['counter_X'], counter_O=session['counter_O'])
@@ -51,8 +66,22 @@ def move():
 @app.route("/computer-move", methods=["POST"])
 def computer_move():
     """Handle the computer's move using Minimax algorithm."""
+    global medium_random  # Declare that you intend to use the global variable
+    best_move = None  # Initialize best_move to ensure it has a value even if no conditions are met
+    print(session['difficulty'],"the dif value")
     if session['current_player'] == 'O' and session['winner'] is None:
-        best_move = find_best_move(session['game'])
+        print("hell1")
+        if session['difficulty'] == 'easy':
+            print("hell22")
+            best_move = place_random_o()
+        elif session['difficulty'] == 'medium':
+            print("hell3")
+            medium_random = not medium_random
+            best_move = medium_level(medium_random, session['game'])
+        elif session['difficulty'] == 'hard':
+            print("hell4")
+            best_move = find_best_move(session['game'])
+        print(best_move)
         if best_move is not None:
             session['game'][best_move] = 'O'
             session['winner'] = check_winner()
@@ -61,6 +90,21 @@ def computer_move():
             session['current_player'] = 'X'  # Switch back to player 'X' after computer's move
     return jsonify(game=session['game'], current_player=session['current_player'], winner=session['winner'],
                    counter_X=session['counter_X'], counter_O=session['counter_O'])
+
+
+@app.route("/difficulty", methods=["POST"])
+def difficultyLevel():
+    data = request.get_json()  # Get the JSON data sent from the client
+    session['difficulty'] = data['difficulty']  # Access the difficulty key from the JSON object
+    print(f"Received difficulty: {session['difficulty']}")
+    return "Difficulty received", 200  # Return a simple string response and HTTP status code
+
+
+def medium_level(medium_random, board):
+    if medium_random == True:
+        return find_best_move(board)
+    else:
+        return place_random_o()
 
 
 def find_best_move(board):
@@ -115,15 +159,6 @@ def check_winner_minimax(board):
         return 'tie'
     return None
 
-def place_random_o():
-    """Place 'O' in a random empty cell."""
-    empty_indices = [i for i, x in enumerate(session['game']) if x == '']
-    if empty_indices:
-        random_index = random.choice(empty_indices)
-        session['game'][random_index] = 'O'
-        return True
-    return False
-
 
 def check_winner():
     """Check for a winner and update counters."""
@@ -151,6 +186,23 @@ def restart():
     init_game_restart()  # Only reinitialize the game board and current player
     return jsonify(game=session['game'], current_player=session['current_player'], winner=session['winner'],
                    counter_X=session['counter_X'], counter_O=session['counter_O'])
+
+@app.route("/back", methods=["POST"])
+def back():
+    """Reset the game state but do not reset the counters."""
+    init_game_back()  # Only reinitialize the game board and current player
+    print("winner is:",session['winner'])
+    return jsonify(game=session['game'], current_player=session['current_player'], winner=session['winner'],
+                   counter_X=session['counter_X'], counter_O=session['counter_O'])
+
+
+def place_random_o():
+    """Place 'O' in a random empty cell and return the index."""
+    empty_indices = [i for i, x in enumerate(session['game']) if x == '']
+    if empty_indices:
+        random_index = random.choice(empty_indices)
+        return random_index  # Return the index instead of modifying the game state
+    return None  # Return None if no moves are possible
 
 
 if __name__ == "__main__":

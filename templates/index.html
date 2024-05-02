@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
 
-    #playerText {
-        animation: zoomFadeIn 1s ease forwards;
-    }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,6 +8,7 @@
     <title>Tic Tac Toe</title>
     <!-- Linking external CSS for styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='difficultyStyle.css') }}" id="main-style">
     <!-- Google Fonts for aesthetic typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +26,28 @@
         Pick your mode and start the fun!</h1>
     <h1 id="playerText">Current Player: X</h1>
     <!-- Restart button to reset the game -->
-    <button class="button" id="onePlayer">One Player</button>
+    <button class="button  " id="onePlayer">One Player</button>
+    <h1 id="difficultyHeader">Select Your Challenge !</h1>
+    <!--    <div id="difficultyContainer">-->
+    <!--      <button class="difficultyBtn" data-difficulty="easy">Easy</button>-->
+    <!--        <button class="difficultyBtn" data-difficulty="medium">Medium</button>-->
+    <!--        <button class="difficultyBtn" data-difficulty="hard">Hard</button>-->
+    <!--    </div>-->
+    <div id="difficultyContainer">
+
+        <div class="bar bar-grey">
+            <div class="difficultyBtn" data-difficulty="easy">Easy</div>
+            <div class="difficultyBtn" data-difficulty="medium">Medium</div>
+            <div class="difficultyBtn" data-difficulty="hard">Hard</div>
+        </div>
+        <div class="bar-outer">
+            <div class="bar bar-purple">
+                <div class="difficultyBtn">Easy</div>
+                <div class="difficultyBtn">Medium</div>
+                <div class="difficultyBtn">Hard</div>
+            </div>
+        </div>
+    </div>
     <button class="button" id="twoPlayers">Two Players</button>
     <button class="button" id="restartBtn">Restart</button>
     <button class="button" id="backBtn">Back</button>
@@ -50,168 +67,11 @@
 </div>
 
 <!-- JavaScript logic to handle the game interaction -->
-<script>
 
-    // Wait until the document is fully loaded to assign functionality
-    document.addEventListener("DOMContentLoaded", function () {
-            const twoPlayersBtn = document.getElementById('twoPlayers');
-            const onePlayerBtn = document.getElementById('onePlayer');
-            const restartBtn = document.getElementById('restartBtn');
-            const gameBoard = document.getElementById('gameboard');
-            const backBtn = document.getElementById('backBtn');
-            const xScore = document.getElementById('X_winning_counter');
-            const oScore = document.getElementById('O_winning_counter');
-            const playerText = document.getElementById('playerText');
-            const welcomeText = document.getElementById('welcomeText');
-            const buttons = document.querySelectorAll(".button");
-            let numberOfPlayers = 0 //this handle the how the server will respond for the user moves
-
-            buttons.forEach(button => {
-                button.classList.add('button-animate');
-                button.addEventListener('animationend', () => {
-                    button.classList.remove('button-animate'); // Remove the animation class after it finishes
-                });
-            });
-
-            onePlayerBtn.addEventListener("click", function () {
-                numberOfPlayers = 1
-                console.log("Starting game, changing to flex"); // This will show in the console when the condition is true
-                gameBoard.style.display = 'flex';
-                restartBtn.style.display = 'flex';
-                onePlayerBtn.style.display = 'none';
-                twoPlayersBtn.style.display = 'none';
-                welcomeText.style.display = 'none';
-                playerText.style.display = 'flex';
-                backBtn.style.display = 'flex';
-                xScore.style.display = 'flex'
-                oScore.style.display = 'flex'
-                document.getElementById('playerText').textContent = `Current Player: X`;
-            });
-
-            //Handle the number of players on the game
-            twoPlayersBtn.addEventListener('click', function () {
-                numberOfPlayers = 2
-                // Use getComputedStyle to check the display property
-                console.log("Starting game, changing to flex"); // This will show in the console when the condition is true
-                gameBoard.style.display = 'flex';
-                restartBtn.style.display = 'flex';
-                twoPlayersBtn.style.display = 'none';
-                onePlayerBtn.style.display = 'none';
-                welcomeText.style.display = 'none';
-                playerText.style.display = 'flex';
-                backBtn.style.display = 'flex';
-                xScore.style.display = 'flex'
-                oScore.style.display = 'flex'
-                document.getElementById('playerText').textContent = `Current Player: X`;
-                playerText.classList.remove('zoomFadeIn');  // Remove to reset animation
-                playerText.offsetWidth; // Trigger reflow to actually reset the animation state
-
-                playerText.classList.add('slideFadeIn');
-
-                // for case of restarting the game
-
-            });
-
-            restartBtn.addEventListener('click', function () {
-                console.log("Restarting game, making fetch call"); // To debug restart logic
-                fetch("/restart", {method: 'POST'})
-                    .then(response => response.json())
-                    .then(data => {
-                        updateGameState(data);
-                    });
-            });
+ <script src="{{ url_for('static', filename='gameLogic/gameLogic.js') }}"></script>
+<script src="{{ url_for('static', filename='gameLogic/uiHandlers.js') }}"></script>
 
 
-            backBtn.addEventListener('click', function () {
-                gameBoard.style.display = 'none';
-                backBtn.style.display = 'none'
-                xScore.style.display = 'none'
-                oScore.style.display = 'none'
-                restartBtn.style.display = 'none'
-                document.getElementById('playerText').innerHTML = `Good to have you back!<br>Pick your mode and start the fun!`;
-                onePlayerBtn.style.display = 'flex'
-                twoPlayersBtn.style.display = 'flex'
-            })
-            // Select all game cells
-            const boxes = document.querySelectorAll(".box");
-            // Add click event listener to each box
-            let computerTurn = false
-            boxes.forEach(box => {
-                box.addEventListener('click', function () {
-                        if (numberOfPlayers === 1) {
-                            const index = this.id; // Get the ID of the clicked box
-                            // Make a POST request to the server with the index of the clicked box
-                            fetch("/move", {
-                                method: 'POST',
-                                body: new URLSearchParams({'index': index, 'numberOfPlayers': numberOfPlayers})
-                            })
-                                .then(response => response.json()) // Parse the JSON response
-                                .then(data => updateGameState(data)); // Update the game state with the new data
-                            setTimeout(() => {
-                                fetch("/computer-move", {
-                                    method: 'POST'
-                                })
-                                    .then(response => response.json()) // Parse the JSON response
-                                    .then(data => updateGameState(data)); // Update the game state with the new data
-                            }, 500)
-                        }
-                        if (numberOfPlayers === 2) {
-                            const index = this.id; // Get the ID of the clicked box
-                            // Make a POST request to the server with the index of the clicked box
-                            fetch("/move", {
-                                method: 'POST',
-                                body: new URLSearchParams({'index': index, 'numberOfPlayers': numberOfPlayers})
-                            })
-                                .then(response => response.json()) // Parse the JSON response
-                                .then(data => updateGameState(data)); // Update the game state with the new data
-                        }
-                    }
-                )
-                ;
 
-            });
-
-            // Function to update the game state on the client side
-            function updateGameState(data) {
-                // Update each box with the respective player's move
-                data.game.forEach((value, idx) => {
-                    document.getElementById(idx.toString()).textContent = value;
-                });
-                // Introduce a slight delay before showing the winner message
-                // This allows the last move to be displayed before the alert.
-                setTimeout(() => {
-                    if (data.winner === 'tie') {
-                        document.getElementById('playerText').textContent = `Draw! The board is full with no winners`;
-                        console.log("aaaa")
-                    } else if (data.winner && data.winner !== 'tie') {
-                        console.log(data.winner)
-                        document.getElementById('playerText').textContent = `${data.winner} has won!`;
-                        updateScores(data);    // Assuming updateScores is defined elsewhere and updates the score
-                        alert(`${data.winner} wins!`);  // Alert the user that there is a winner
-                    } else {
-                        // Update the text content to show who the current player is if there's no winner yet
-                        document.getElementById('playerText').textContent = `Current Player: ${data.current_player}`;
-                    }
-                }, 300);  // Delay of 300 milliseconds
-            }
-
-            function updateScores(data) {
-                // Ensure these elements exist and are updated correctly
-                document.getElementById('X_winning_counter').textContent = `X Wins: ${data.counter_X}`;
-                document.getElementById('O_winning_counter').textContent = `O Wins: ${data.counter_O}`;
-            }
-
-            function computerMove() {
-                let emptyCells = Array.from(boxes).filter(c => c.textContent === '');
-                if (emptyCells.length > 0) {
-                    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                    randomCell.textContent = 'O';
-                }
-            }
-        }
-    )
-    ;
-
-</script>
 </body>
 </html>

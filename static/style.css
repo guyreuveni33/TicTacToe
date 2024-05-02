@@ -24,7 +24,7 @@ h1 {
 
 .container {
     padding: 40px;
-    height: 100vh;
+    height: 130vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +38,6 @@ h1 {
     flex-wrap: wrap;
     margin-top: 40px;
     animation: slideFadeIn 2s ease-out forwards;
-
 }
 
 .box {
@@ -63,15 +62,17 @@ h1 {
 
 
 .button {
+        font-family: 'Finger Paint', cursive;
+
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 20px;
     background-color: var(--orange);
     color: #333;
     border: none;
     font-size: 18px;
     font-weight: 600;
     margin-top: 10px;
-    width: 170px;
+    width: 162px;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
 }
 
@@ -136,21 +137,67 @@ h1 {
 
 }
 
-/* Define keyframes for the slideFadeIn animation */
-@keyframes slideFadeIn {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
+/*!* Define keyframes for the slideFadeIn animation *!*/
+/*@keyframes slideFadeIn {*/
+/*    from {*/
+/*        transform: translateY(30px);*/
+/*        opacity: 0;*/
+/*    }*/
+/*    to {*/
+/*        transform: translateY(0);*/
+/*        opacity: 1;*/
+/*    }*/
+/*}*/
 
-#backBtn{
+#backBtn {
     display: none;
     align-items: center;
     justify-content: center;
 }
 
+
+#onePlayer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#twoPlayers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/*.difficultyBtn {*/
+/*    padding: 10px 20px;*/
+/*    border-radius: 20px;*/
+/*    background-color: var(--orange);*/
+/*    color: #333;*/
+/*    border: 2px solid transparent; !* Ensuring layout does not shift *!*/
+/*    font-size: 18px;*/
+/*    font-weight: 600;*/
+/*    margin-top: 10px;*/
+/*    width: 100px;*/
+/*    transition: all 0.3s ease; !* Smooth transitions for hover and active states *!*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center; !* Vertically aligns titles if they are of different heights *!*/
+/*    margin-bottom: 5px;*/
+/*}*/
+
+/*.difficultyBtn.active {*/
+/*    border-color: #000000; !* Black border for the active button *!*/
+/*    border-width: 5px; !* Specify the border width *!*/
+
+/*}*/
+
+/*#difficultyContainer {*/
+/*    display: flex;*/
+/*    justify-content: center; !* Align buttons in the center horizontally *!*/
+/*    gap: 10px; !* Space between buttons *!*/
+/*        margin-bottom: 0;  // Reduces space below the container if any*/
+
+/*}*/
