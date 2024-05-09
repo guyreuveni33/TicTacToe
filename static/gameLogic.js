@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
-        //this handle the difficult buttons outer animation
+        //this handle the difficult buttons outer animation. geeksforgeeks.org
         const barOuter = document.querySelector(".bar-outer");
         let isBarOuterDisplayed = false;  // State to track if the bar-outer is displayed
         difficultyButtons.forEach((button, index) => {

@@ -7,6 +7,7 @@ app.secret_key = 'your_secret_key'
 medium_random = True
 
 
+# this for the restart button, in order not to reset the scores
 def init_game_restart():
     """Initialize a new game session with empty slots and starting player 'X'."""
     session['game'] = [''] * 9
@@ -14,13 +15,13 @@ def init_game_restart():
     session['winner'] = None
 
 
+# this for the back button, in order to reset the game and the scores
 def init_game_back():
     """Initialize a new game session with empty slots, starting player 'X', and reset counters."""
     session['game'] = [''] * 9
     session['current_player'] = 'X'
     session['winner'] = None
     session['counter_X'] = 0  # Reset the X wins counter
-    print(session['counter_X'])
     session['counter_O'] = 0  # Reset the O wins counter
 
 
@@ -30,7 +31,6 @@ def init_game():
     session['current_player'] = 'X'
     session['winner'] = None
     session['counter_X'] = 0  # Reset the X wins counter
-    print(session['counter_X'])
     session['counter_O'] = 0  # Reset the O wins counter
     session['difficulty'] = 'none'  # Optionally reset difficulty setting
 
@@ -38,7 +38,6 @@ def init_game():
 @app.route("/")
 def home():
     """Serve the main game page and initialize game state if not already present."""
-    print("aaaaa")
     init_game()
     return render_template("index.html", game=session['game'], current_player=session['current_player'],
                            counter_X=session['counter_X'], counter_O=session['counter_O'])
@@ -54,7 +53,6 @@ def move():
         session['winner'] = check_winner()
         if session['winner'] is None:
             if check_for_tie():  # Check for a tie
-                print("bbbbb")
                 session['winner'] = 'tie'
             # Switch players in case of two players and if no winner yet
         if session['winner'] is None:
@@ -65,23 +63,18 @@ def move():
 
 @app.route("/computer-move", methods=["POST"])
 def computer_move():
-    """Handle the computer's move using Minimax algorithm."""
-    global medium_random  # Declare that you intend to use the global variable
+    """Handle the computer's move using Minimax algorithm/random algorithm according to the level."""
+    global medium_random  # Declare that we intend to use the global variable
     best_move = None  # Initialize best_move to ensure it has a value even if no conditions are met
-    print(session['difficulty'],"the dif value")
+    # doing the moves according to the difficulty level
     if session['current_player'] == 'O' and session['winner'] is None:
-        print("hell1")
         if session['difficulty'] == 'easy':
-            print("hell22")
             best_move = place_random_o()
         elif session['difficulty'] == 'medium':
-            print("hell3")
             medium_random = not medium_random
             best_move = medium_level(medium_random, session['game'])
         elif session['difficulty'] == 'hard':
-            print("hell4")
             best_move = find_best_move(session['game'])
-        print(best_move)
         if best_move is not None:
             session['game'][best_move] = 'O'
             session['winner'] = check_winner()
@@ -96,10 +89,10 @@ def computer_move():
 def difficultyLevel():
     data = request.get_json()  # Get the JSON data sent from the client
     session['difficulty'] = data['difficulty']  # Access the difficulty key from the JSON object
-    print(f"Received difficulty: {session['difficulty']}")
     return "Difficulty received", 200  # Return a simple string response and HTTP status code
 
 
+# this function is for the medium level, it is a combination of the random algorithm and the minimax algorithm
 def medium_level(medium_random, board):
     if medium_random == True:
         return find_best_move(board)
@@ -180,6 +173,7 @@ def check_for_tie():
     return '' not in session['game'] and session['winner'] is None
 
 
+# this is for the restart button, in order not to reset the scores
 @app.route("/restart", methods=["POST"])
 def restart():
     """Reset the game state but do not reset the counters."""
@@ -187,11 +181,11 @@ def restart():
     return jsonify(game=session['game'], current_player=session['current_player'], winner=session['winner'],
                    counter_X=session['counter_X'], counter_O=session['counter_O'])
 
+
 @app.route("/back", methods=["POST"])
 def back():
-    """Reset the game state but do not reset the counters."""
+    """Reset the game state and reset the counters."""
     init_game_back()  # Only reinitialize the game board and current player
-    print("winner is:",session['winner'])
     return jsonify(game=session['game'], current_player=session['current_player'], winner=session['winner'],
                    counter_X=session['counter_X'], counter_O=session['counter_O'])
 
@@ -203,6 +197,7 @@ def place_random_o():
         random_index = random.choice(empty_indices)
         return random_index  # Return the index instead of modifying the game state
     return None  # Return None if no moves are possible
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

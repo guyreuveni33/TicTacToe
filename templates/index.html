@@ -19,8 +19,8 @@
 <div class="container">
     <!-- Game title -->
     <div class="title-container">
-        <h1 id="X_winning_counter" class="">X Wins:0</h1>
-        <h1 id="O_winning_counter">O Wins:0</h1>
+        <h1 class="winning_counter">X Wins:0</h1>
+        <h1 class="winning_counter">O Wins:0</h1>
     </div>
     <h1 id="welcomeText">Welcome to Tic Tac Toe!<br>
         Pick your mode and start the fun!</h1>
@@ -62,10 +62,6 @@
 </div>
 
 <!-- JavaScript logic to handle the game interaction -->
-
- <script src="{{ url_for('static', filename='gameLogic.js') }}"></script>
-
-
-
+<script src="{{ url_for('static', filename='gameLogic.js') }}"></script>
 </body>
 </html>
