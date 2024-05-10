@@ -85,7 +85,12 @@ h1 {
 }
 
 
-.winning_counter {
+.X_winning_counter {
+    display: none;
+    animation: slideFadeIn 2s ease-out forwards;
+
+}
+.O_winning_counter {
     display: none;
     animation: slideFadeIn 2s ease-out forwards;
 
