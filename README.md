@@ -1,4 +1,6 @@
 # Tic Tac Toe Game
+ 
+Experience classic fun with our online Tic Tac Toe game, available to play 🎮[here](http://guyreuveni.pythonanywhere.com). Enjoy testing your skills against friends or the AI!
 
 ## Overview
 
