@@ -67,6 +67,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function turnMenuOn() {
             difficultyContainer.style.display = 'flex'; // Show the difficulty buttons again
+            welcomeText.style.display = 'flex';
+            document.getElementById('welcomeText').innerHTML = 'Welcome back to Tic Tac Toe!<br>Ready to jump back in start a new challenge?';
+
             onePlayerBtn.style.display = 'flex'
             twoPlayersBtn.style.display = 'flex'
             difficultyHeader.style.display = 'flex';
@@ -106,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         function turnGameBoardOff() {
+            playerText.style.display = 'none';
             gameBoard.style.display = 'none';
             backBtn.style.display = 'none'
             xScore.style.display = 'none'

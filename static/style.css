@@ -24,7 +24,7 @@ h1 {
 
 .container {
     padding: 40px;
-    height: 130vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -85,12 +85,12 @@ h1 {
 }
 
 
-.X_winning_counter {
+#X_winning_counter {
     display: none;
     animation: slideFadeIn 2s ease-out forwards;
 
 }
-.O_winning_counter {
+#O_winning_counter {
     display: none;
     animation: slideFadeIn 2s ease-out forwards;
 
