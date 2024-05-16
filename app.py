@@ -6,7 +6,6 @@ app.secret_key = 'your_secret_key'
 
 medium_random = True
 
-
 # this for the restart button, in order not to reset the scores
 def init_game_restart():
     """Initialize a new game session with empty slots and starting player 'X'."""
